@@ -1,4 +1,5 @@
 http-static-server/*
+*.bat
 
 # Logs
 logs
