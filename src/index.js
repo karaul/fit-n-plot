@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
     legend: {
       fontSize: 15,
       horizontalAlign: "right", // "center" , "right" "left"
-      verticalAlign: "bottom", // "top" , "bottom" center
+      verticalAlign: "top", // "top" , "bottom" center
       //,cursor: "pointer"
       //,itemclick: toggleDataSeries
     },
@@ -95,12 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
         type: "scatter",
         showInLegend: false,
         //legendText: "Input Data",
-        markerType: "circle", //"triangle",
-        markerColor: "#ffffff",
+        //markerType: "circle", //"triangle",
+        //markerColor: "#ffffff",
         //fillOpacity: .1,
         //markerSize: 4,
-        markerBorderColor: "#00B000",
-        markerBorderThickness: 0.5,
+        //markerBorderColor: "#00B000",
+        //markerBorderThickness: 0.5,
         toolTipContent: "<b>X: </b>{x} <br/><b>Yexp: </b>{y}k",
         dataPoints: dataY,
       },
