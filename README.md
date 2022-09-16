@@ -1,6 +1,6 @@
 # fit-n-plot
 
-Simple and fast javascript program to plot and fit noisy experimental data
+Simple and fast javascript program to fit  and plot noisy experimental data
 
 ## Usage
 
