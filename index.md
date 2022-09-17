@@ -43,14 +43,15 @@
       <!-- <option value="distance">distance</option>  -->
       <!-- <option value="timestamp">time</option> -->
       <!-- </select>  -->
+      &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+      &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp 
+      <label for="filehist">Histogram Files:</label>
+      <input id="filehist" type="file"  multiple="" value="" style="padding: 20px" />
+  
     </p>
 
     Fit Function:
     <textarea cols="70" rows="1" id="eq"> 5.88 - 5.063*x + 1.03*x*x  </textarea>
-    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-    <label for="filehist">Histogram File:</label>
-    <input id="filehist" type="file" value="" style="padding: 20px" />
 
     <br />
 
