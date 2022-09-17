@@ -75,7 +75,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var chart = new CanvasJS.Chart("plotarea", {
     title: {
-      text: "Data Plot + Fit Function"
+      text: "Data Plot + Fit Function",
+      fontSize: 25,
     },
     zoomEnabled: true,
     zoomType: "xy", // "x","y", "xy"
@@ -121,7 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var charHist = new CanvasJS.Chart("plothist", {
     theme: "light2",
     title: {
-      text: "Parameter PDF"
+      text: "Parameter PDF",       
+      fontSize: 25,
     },
     legend: {
       fontSize: 15,
@@ -236,7 +238,8 @@ document.addEventListener("DOMContentLoaded", function () {
     chart.options.data.push({
       type: "line",
       showInLegend: true,
-      legendText: "fit: " + eq,
+      legendText: eq,
+      toolTipContent: "{legendText}<br>X: {x}  F:  {y}",
       dataPoints: data,
     });
     chart.render();

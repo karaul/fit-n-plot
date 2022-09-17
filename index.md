@@ -20,15 +20,18 @@
         padding: 6px;
       }
       .column1 {
-        width: 50%;
-        float: left;
-        padding: 2px;
+        width:50%;
+        border: 10px solid #CCCCCC;
+        box-sizing: border-box;
+        float:left;
+        height:300px;
       }
       .column2 {
-        width: 50%;
-        height: 240px;
-        float: left;
-        padding: 2px;
+        width:50%;
+        border: 10px solid #CCCCCC;
+        box-sizing: border-box;
+        float:left;
+        height:300px;
       }
     </style>
   </head>
