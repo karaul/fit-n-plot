@@ -40,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   var fReader = new FileReader();
-  var fReaderHist = new FileReader();
 
   var fileInput = document.getElementById("myfile");
   var fileHist = document.getElementById("filehist");
@@ -54,9 +53,20 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   fileHist.onchange = function (e) {
-    var file = this.files[0];
-    filename = file.name;
-    fReaderHist.readAsText(file);
+    //console.log(this.files);
+    for (var i = 0; i < this.files.length; i++) {
+      var fReaderHist = new FileReader();
+      var file = this.files[i];
+      var filename = file.name;
+      fReaderHist.onload = (function (file) {
+        return function (e) {
+          readHist(e, file)
+        };
+      })(filename);
+      fReaderHist.readAsText(file);
+    }
+
+    charHist.render();
   };
 
   var xStart, xEnd;
@@ -64,7 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var dataYErr = [];
 
   var chart = new CanvasJS.Chart("plotarea", {
-    title: { text: "Data Plot + Fit Function" },
+    title: {
+      text: "Data Plot + Fit Function"
+    },
     zoomEnabled: true,
     zoomType: "xy", // "x","y", "xy"
     //,rangeChanging: updateMapSegment
@@ -79,16 +91,15 @@ document.addEventListener("DOMContentLoaded", function () {
       verticalAlign: "top", // "top" , "bottom" center
       //,cursor: "pointer"
       //,itemclick: toggleDataSeries
+      itemclick: toggleDataSeries,
     },
-    data: [
-      {
+    data: [{
         type: "error",
         showInLegend: false,
         //legendText: "input",
         name: "Error",
         //whiskerLength: 0.5,
-        toolTipContent:
-          '<span style="color:#C0504E">{name}</span>: {y[0]} - {y[1]}',
+        toolTipContent: '<span style="color:#C0504E">{name}</span>: {y[0]} - {y[1]}',
         dataPoints: dataYErr,
       },
       {
@@ -107,6 +118,23 @@ document.addEventListener("DOMContentLoaded", function () {
     ],
   });
 
+  var charHist = new CanvasJS.Chart("plothist", {
+    theme: "light2",
+    title: {
+      text: "Parameter PDF"
+    },
+    legend: {
+      fontSize: 15,
+      horizontalAlign: "right", // "center" , "right" "left"
+      verticalAlign: "top", // "top" , "bottom" center
+      //,cursor: "pointer"
+      //,itemclick: toggleDataSeries
+      itemclick: toggleDataSeries,
+    },
+    data: []
+  });
+
+
   fReader.onload = function (e) {
     //console.log(e.target.result); /// <-- this contains an ArrayBuffer
     var text = e.target.result;
@@ -121,10 +149,12 @@ document.addEventListener("DOMContentLoaded", function () {
     xEnd = -999999999;
     for (var i = linestart; i < lines.length; i++) {
       var s = lines[i].split(delim[0]);
-      if (isNaN(parseFloat(s[0]))) {
-      } else {
+      if (isNaN(parseFloat(s[0]))) {} else {
         var x = parseFloat(s[0]);
-        dataY.push({ x: x, y: parseFloat(s[1]) });
+        dataY.push({
+          x: x,
+          y: parseFloat(s[1])
+        });
         dataYErr.push({
           x: x,
           y: [
@@ -147,9 +177,12 @@ document.addEventListener("DOMContentLoaded", function () {
     //data = transpose(data);
   };
 
-  fReaderHist.onload = function (e) {
+  readHist = function (e, filename) {
     //console.log(e.target.result); /// <-- this contains an ArrayBuffer
+    //var filename=e.name;
+    //console.log(fReaderHist.filename);
     var text = e.target.result;
+    //console.log(text);
     var lines = text.split(/[\r\n]+/g); // tolerate both Windows and Unix linebreaks
 
     linestart = 0;
@@ -159,18 +192,17 @@ document.addEventListener("DOMContentLoaded", function () {
     var delim = guessDelimiters(lines[8] + "\n" + lines[9], [" ", "\t", ","]);
     //xStart = 999999999;
     //xEnd = -999999999;
-
-    var chart = new CanvasJS.Chart("plothist", {
-      theme: "light2",
-      title: { text: "Parameter PDF" },
-      data: [{ type: "column", dataPoints: [] }],
+    var nHist = charHist.options.data.length || 0;
+    charHist.options.data.push({
+      type: "column",
+      showInLegend: true,
+      legendText: filename,
+      dataPoints: []
     });
-
     for (var i = linestart; i < lines.length; i++) {
       var s = lines[i].split(delim[0]);
-      if (isNaN(parseFloat(s[0]))) {
-      } else {
-        chart.options.data[0].dataPoints.push({
+      if (isNaN(parseFloat(s[0]))) {} else {
+        charHist.options.data[nHist].dataPoints.push({
           x: parseFloat(s[0]),
           y: parseFloat(s[1]),
         });
@@ -179,8 +211,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    chart.render();
-    //data = transpose(data);
+    charHist.render();
+
   };
 
   document.getElementById("plot").onclick = function () {
@@ -189,14 +221,17 @@ document.addEventListener("DOMContentLoaded", function () {
     var data = [];
     var Nbin = 100;
     var xs = (xEnd - xStart) / Nbin;
-    // console.log(xStart,xEnd,xs)
+    // console.log(xStart,xEnd,xs)    
     for (var i = 0; i < Nbin + 1; i++) {
       var x = xStart + i * xs;
       //   return [ 5.88 - 5.063*x + 1.03*x*x ];
       var y = fn(x);
       //var y = 5.88 - 5.063*x + 1.03*x*x;
-      console.log(x, y);
-      data.push({ x: x, y: y });
+      //console.log(x, y);
+      data.push({
+        x: x,
+        y: y
+      });
     }
     chart.options.data.push({
       type: "line",
@@ -257,4 +292,14 @@ document.addEventListener("DOMContentLoaded", function () {
       plotButton.onclick = plot;
       plot();
 	*/
+
+  function toggleDataSeries(e) {
+    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+      e.dataSeries.visible = false;
+    } else {
+      e.dataSeries.visible = true;
+    }
+    e.chart.render();
+  };
+
 });
